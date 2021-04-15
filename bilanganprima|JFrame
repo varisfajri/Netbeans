@@ -1,0 +1,67 @@
+ *masukan code ini di bottom yang akan menjadi output
+        awal = tbawal.getText();
+bilawal = Integer.parseInt(awal);
+akhir = tbakhir.getText();
+bilakhir = Integer.parseInt(akhir);
+tbhasil.setLineWrap(true);
+boolean[] prima=new boolean[bilakhir+1];
+tbhasil.setText("");
+
+if(bilakhir<=100 ){
+
+for(int bilawal =0; bilawal <= bilakhir; bilawal++){ //set seluruh array menjadi TRUE
+prima [bilawal] = true;
+}
+prima [0] = prima[1] = false; //0 dan 1 bukan bil. prima
+double akarN= Math.sqrt(bilakhir); //akar kuadrat dari n
+
+//coret bilangan yang bukan prima
+for(int bilawal=2; bilawal<=akarN; bilawal++) {
+if (prima[bilawal]) {
+for (int j=bilawal*bilawal; j<=bilakhir; j=j+bilawal) {
+prima[j]=false;
+}
+}
+
+//tampilkan seluruh bilangan prima dengan kondisi array TRUE
+int jum = 0;
+for( bilawal = Integer.parseInt(awal); bilawal<bilakhir; bilawal++) {
+
+if (prima[bilawal]){
+String hasilnya = Integer.toString(bilawal);
+tbhasil.append(hasilnya+ " ,");
+jum = jum+1;
+
+}
+System.out.println("JUMLAH:"+jum);
+tbjumlah.setText(Integer.toString (jum));
+}
+
+// untuk lakukan code application logic disiniiii
+}
+
+}else{
+System.out.println("lebih dari 100");
+tbhasil.setText("Maksimum batas akhir : 100");
+}
+
+
+
+
+
+*yang ini untuk menghapus 
+tbawal.setText("");
+      tbakhir.setText("");
+      tbhasil.setText("");
+      tbjumlah.setText("");
+      
+tambah import di atas public class flie anda(di paling atas)
+import javax.swing.JOptionPane;
+import java.io.*;
+
+lalu ingat tbawal,tbakhir,tbjumlah dan hasil itu variable name yang di gunakan, jadi menyesuaikan dengan punya kamu ya
+
+
+
+
+editor Kenn
