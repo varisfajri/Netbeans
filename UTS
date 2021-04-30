@@ -1,0 +1,217 @@
+import : import java.sql.Connection;
+         import java.sql.DriverManager;
+         import java.sql.Statement;
+         import java.sql.ResultSet;
+         import javax.swing.JOptionPane;
+         import javax.swing.table.DefaultTableModel;
+         
+awal:         public class datakeluarga extends javax.swing.JFrame {
+
+    Object data[] = new Object[6];
+    int row;
+     public datakeluarga() {
+        initComponents();
+        jtabel.setModel(tblModel);
+        Tabel(jtabel, new int[]{20, 180, 120, 120, 120, 120});
+        this.setLocationRelativeTo(null);
+        setDefaultTabel();
+
+    }
+    
+    button simpan :
+                           String jenkel = "";
+
+        if (rdlaki.isSelected()) {
+            jenkel = "laki-laki";
+        } else {
+            jenkel = "wanita";
+        }
+        data[0] = txnama.getText();
+        data[1] = txtanggal.getText();
+        data[2] = txtempat.getText();
+        data[3] = jenkel;
+        data[4] = cmbketurunan.getSelectedItem().toString();
+        data[5] = cmbanak.getSelectedItem().toString();
+        Object  namalengkap  = data[0];
+        Object  tanggallahir = data[1];
+        Object  tempatlahir  = data[2];
+        Object  jeniskelamin = data[3];
+        Object  keturunan    = data[4];
+        Object  anak         = data[5];
+
+        try {
+            String dbname       = "jdbc:mysql://localhost:3306/kendra"; //  db host
+            Class.forName("com.mysql.cj.jdbc.Driver"); //menggunakan driver my 
+            Connection con      = DriverManager.getConnection(dbname, "root", ""); // user dan password database
+            Statement statement = con.createStatement();
+            String sql          = "insert into `data_kekeluargaan` (`nama panjang`, `tanggal lahir`, `tempat lahir`, `jenis kelamin`, `keturunan`, `anak ke`)"
+                                  + " values('" + namalengkap + "','" + tanggallahir + "','" + tempatlahir + "','" + jeniskelamin + "','" + keturunan + "'," + anak + ")";
+            int stat            = statement.executeUpdate(sql);
+            
+            if (stat > 0) {
+                tblModel.addRow(data);
+                statement.close();
+                JOptionPane.showMessageDialog(null, "DATA BERHASIL MASUK KE DATABASE ANDA", "Insert Data", JOptionPane.INFORMATION_MESSAGE);
+                con.close();
+            }
+        } catch (Exception e2) {
+            {
+                JOptionPane.showMessageDialog(null, "Eror:" + e2, "Gagal", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+
+    public void Tampil() {
+        row = jtabel.getSelectedRow();
+        txnama.setText(jtabel.getValueAt(row, 0).toString());
+        txtanggal.setText(jtabel.getValueAt(row, 1).toString());
+        txtempat.setText(jtabel.getValueAt(row, 2).toString());
+        if (jtabel.getValueAt(row, 3).toString().equals("Laki-Laki")) {
+            rdlaki.setSelected(true);
+        } else {
+            rdwanita.setSelected(false);
+        }
+        cmbketurunan.setSelectedItem(jtabel.getValueAt(row, 4).toString());
+        cmbanak.setSelectedItem(jtabel.getValueAt(row, 5).toString());
+        // TODO add your handling code here:
+    } 
+    
+    button ubah : 
+           String jenkel = "";
+        if (rdlaki.isSelected()) {
+            jenkel = "laki-laki";
+        } else {
+            jenkel = "wanita";
+        }
+        data[0] = txnama.getText();
+        data[1] = txtanggal.getText();
+        data[2] = txtempat.getText();
+        data[3] = jenkel;
+        data[4] = cmbketurunan.getSelectedItem().toString();
+        data[5] = cmbanak.getSelectedItem().toString();
+
+        try {
+            String dbname       = "jdbc:mysql://localhost:3306/kendra"; //  db host
+            Class.forName("com.mysql.cj.jdbc.Driver"); //menggunakan driver my 
+            Connection con      = DriverManager.getConnection(dbname, "root", ""); // user dan password database
+            Statement statement = con.createStatement();
+            String sql          = "UPDATE `data_kekeluargaan` SET  `tanggal lahir` = '" + txtanggal.getText() + "',`tempat lahir` = '" + txtempat.getText() + "', `jenis kelamin` = '" + jenkel + "',`keturunan`= '" + cmbketurunan.getSelectedItem().toString() + "',`anak ke`= " + cmbanak.getSelectedItem().toString() + " WHERE `nama panjang` = '" + txnama.getText() + "'";
+            int stat            = statement.executeUpdate(sql);
+
+            if (stat > 0) {
+                statement.close();
+                con.close();
+                JOptionPane.showMessageDialog(null, "DATA ANDA BERHASIL DI UBAH", "Ubah Data", JOptionPane.INFORMATION_MESSAGE);
+                tblModel.removeRow(row);
+                tblModel.insertRow(row, data);
+            }
+
+        } catch (Exception e2) {
+            JOptionPane.showMessageDialog(null, "Eror:" + e2, "Gagal", JOptionPane.WARNING_MESSAGE);
+        }
+        // TODO add your handling code here:
+    }                                        
+
+  untuk menampilkan data base di jframe :
+  
+  public void setDefaultTabel() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection kon  = DriverManager.getConnection("jdbc:mysql://localhost:3306/kendra", "root", "");
+            Statement stt   = kon.createStatement();
+            String sql      = "SELECT * FROM `data_kekeluargaan`";
+            ResultSet res   = stt.executeQuery(sql);
+            
+            while (res.next()) {
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                data[2] = res.getString(3);
+                data[3] = res.getString(4);
+                data[4] = res.getString(5);
+                data[5] = res.getInt(6);
+
+                tblModel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    button deleted :
+       try {
+            Class.forName("com.mysql.cj.jdbc.Driver"); //menggunakan driver my 
+            String dbname       = "jdbc:mysql://localhost:3306/kendra"; //  db host
+            Connection con      = DriverManager.getConnection(dbname, "root", ""); // user dan password database
+            Statement statement = con.createStatement();
+            String sql          = "DELETE FROM `data_kekeluargaan` WHERE `nama panjang` = '" + txnama.getText() + "'";
+            int stat            = statement.executeUpdate(sql);
+            
+            if (stat > 0) {
+                tblModel.removeRow(row);
+                statement.close();
+                con.close();
+                JOptionPane.showMessageDialog(null, "DATA ANDA TELAH DIHAPUS", "Hapus Data", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (Exception e2) {
+            {
+                JOptionPane.showMessageDialog(null, "Eror:" + e2, "Gagal", JOptionPane.WARNING_MESSAGE);
+            }
+
+        }
+
+
+    }                                        
+    
+    button keluar :
+      this.dispose();
+    }                     
+    
+    
+    
+    untuk mengaktifkan panggilan yang telah di buat :
+    
+      String namaID;
+    private void jtabelMouseClicked(java.awt.event.MouseEvent evt) {                                    
+        // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+            Tampil();
+        } else if (evt.getClickCount() == 1) {
+            row      = jtabel.getSelectedRow();
+            namaID   = tblModel.getValueAt(row, 0).toString();
+        }
+    }                                   
+    private void Tabel(javax.swing.JTable tb, int lebar[]) {
+        tb.setAutoResizeMode(tb.AUTO_RESIZE_OFF);
+        int kolom  = tb.getColumnCount();
+        for (int i = 0; i < kolom; i++) {
+            javax.swing.table.TableColumn tbc = tb.getColumnModel().getColumn(i);
+            tbc.setPreferredWidth(lebar[i]);
+            tb.setRowHeight(17);
+
+        }
+    }
+
+    private javax.swing.table.DefaultTableModel getDefaultTabelModel() {
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"nama panjang", "tanggal lahir", "TEMPAT TINGGAL", "JENIS KELAMIN", "KETURUNAN", "ANAK KE"}
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+    }
+
+
+tambah private di paling bawah codinggan :
+private javax.swing.table.DefaultTableModel tblModel = getDefaultTabelModel();
+}
+     
